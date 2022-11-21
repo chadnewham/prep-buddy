@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{%block content%}
+    <div class="ui large header">
+        {{date_stamp}}
+    </div>
+
+    <table class="ui compact celled definition table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Item</th>
+                <th>Par</th>
+                <th>On Hand</th>
+                <th>Prepped</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for item in one_inventory%}
+            <tr>
+                <td class="collapsing">
+                    <div class="ui fitted slider checkbox">
+                        <input type="checkbox"><label></label>
+                    </div>
+                </td>
+                <td>{{item['item']}}</td>
+                <td>par</td>
+                <td>{{item['on_hand']}}</td>
+                <td>prepped</td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+{%endblock%}
+

@@ -1,0 +1,101 @@
+{% extends "base.html" %} 
+
+{%block content%} 
+<div class="ui grid">
+    <div class="four wide column">
+        <div class="ui segment">
+            <h2 class="ui header">
+                Previous Lists
+            </h2>
+            {%for item in date_template%}
+                <div class="ui small header">
+                <a href="/show-one-inventory/{{item}}">{{date_template[item]}}</a>
+                    
+                </div>
+            {%endfor%}
+        </div>
+    </div>
+    <div class="eight wide column">
+        <div class="ui one column centered grid">
+            <div class="column">
+
+                <form action="/inventory/" method="POST" class="ui form">
+                <div class="ui compact segments">
+
+                    {%for item in inventory_list%}
+                    <div class="ui segment">
+                        <div class="ui grid">
+                            <div class="row">
+                                <div class="eight wide center aligned column">
+                                    <div class="ui medium header">
+                                        {{item['item']}}
+                                    </div>
+                                </div>
+                                <div class="six wide column">
+                                    <div class="ui right labeled input">
+                                        <input class="custom-input-focus" type="text" name="{{item['_id']}}">
+                                        <div class="ui basic label">
+                                            {{item['unit']}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%endfor%}
+                    <div class="ui segment">
+                        <button class="ui huge blue inverted button submit">Generate</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- <div class="ui segment">
+    <div class="ui grid">
+        <div class="column">
+            <h1>Lists</h1>
+        </div>
+        <div class="column">
+            <div class="ui one column centered grid">
+                <form action="/inventory" method="POST" class="ui form">
+                <div class="ui compact segments">
+
+                    {%for item in inventory_list%}
+                    <div class="ui segment">
+                        <div class="ui grid">
+                            <div class="row">
+                                <div class="eight wide center aligned column">
+                                    <div class="ui medium header">
+                                        {{item['item']}}
+                                    </div>
+                                </div>
+                                <div class="six wide column">
+                                    <div class="ui right labeled input">
+                                        <input class="custom-input-focus" type="text" name="{{item['_id']}}">
+                                        <div class="ui basic label">
+                                            {{item['unit']}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%endfor%}
+                    <div class="ui segment">
+                        <button class="ui huge blue inverted button submit">Generate</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+{%endblock%}
+
+{%block foot%}
+<script src="{{ url_for('static',filename='inventory.js') }}"></script>
+{%endblock%}

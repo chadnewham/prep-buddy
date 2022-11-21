@@ -1,0 +1,27 @@
+{%extends "base.html"%} {%block head%}
+<link rel="stylesheet" href="{{ url_for('static',filename='index.css') }}" />
+{%endblock%} {%block content%}
+<table id="prep-table" class="ui compact large celled table">
+	<thead>
+		<tr>
+			<th>Item</th>
+			<th>Par</th>
+			<th>Unit</th>
+			<th>Prep Time</th>
+		</tr>
+	</thead>
+	<tbody>
+		{%for doc in fromdb%}
+		<tr>
+			<td data-label="Item"><a href="/edit-one/{{doc['_id']}}">{{doc['item']}}</a></td>
+			<td data-label="Par">{{doc['par']}}</td>
+			<td data-label="Unit">{{doc['unit']}}</td>
+			<td data-label="Prep Time">{{doc['prep_time']}}</td>
+		</tr>
+		{%endfor%}
+	</tbody>
+</table>
+
+{%endblock%} {%block foot%}
+<script src="{{ url_for('static',filename='index.js') }}"></script>
+{%endblock%}

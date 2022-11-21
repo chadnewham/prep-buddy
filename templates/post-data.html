@@ -1,0 +1,28 @@
+{%extends "base.html"%} {%block content%}
+
+<form class="ui form" action="/add-one" method="POST">
+    <div class="Four fields">
+        <div class="field">
+            <label>Item Name</label>
+            <input type="text" name="item">
+        </div>
+        <div class="field">
+            <label>Par</label>
+            <input type="text" name="par">
+        </div>
+        <div class="field">
+            <label>Unit</label>
+            <input type="text" name="unit">
+        </div>
+        <div class="field">
+            <label>Minutes to prep</label>
+            <input type="text" name="prep_time">
+        </div>
+    </div>
+    <button class="ui button submit">Submit</button>
+</form>
+
+
+
+
+{%endblock%}

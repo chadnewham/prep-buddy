@@ -1,0 +1,40 @@
+{% extends "base.html" %} {%block content%}
+
+<form class="ui form" action="/edit-one" method="POST">
+    <input id="item-id" type="hidden" name="id" value="{{one_item['_id']}}">
+    <div class="four fields">
+        <div class="field">
+            <label>Item Name</label>
+            <input type="text" name="item" value="{{one_item['item']}}">
+        </div>
+        <div class="field">
+            <label>Par</label>
+            <input type="text" name="par" value="{{one_item['par']}}">
+        </div>
+        <div class="field">
+            <label>Unit</label>
+            <input type="text" name="unit" value="{{one_item['unit']}}">
+        </div>
+        <div class="field">
+            <label>Minutes to prep</label>
+            <input type="text" name="prep_time" value="{{one_item['prep_time']}}">
+        </div>
+    </div>
+    <div class="ui two column grid container">
+        
+        <div class="column">
+             <button class="ui button submit" name="update-button" value="update">Submit</button>
+        </div>
+        <div class="right aligned column">
+            <div class="ui form">
+                <button id="delete-button" class="ui submit red button" name="update-button" value="delete">Delete</button>
+            </div>
+        </div>
+    </div>
+    
+</form>
+
+{%endblock%}
+{%block foot%}
+<script src="{{ url_for('static',filename='editOne.js') }}"></script>
+{%endblock%}
