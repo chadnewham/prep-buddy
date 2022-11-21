@@ -1,3 +1,4 @@
+from datetime import date
 from flask import Flask, render_template, request, redirect, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -7,13 +8,21 @@ import uuid
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://localhost:27017/test_prep_database"
 mongo = PyMongo(app)
+# Collections used -> prep, inventory_id, and inventory
+# prep collection contains items available to prep. It is used to generate unique (daily) inventory lists
+# prep structure -> {item: string, par: int, unit: string, prep_time: int}
+
+# inventory_id collection contains UUIDs referenced in the inventory collection
+# inventory_id structure -> {inventory_id: UUID}
+
+# inventory collection contains documents inventoried on a specific day
+# inventory structure -> {item: string, inventory_id: UUID, on_hand: int, par: int, unit: string}
 
 
 @app.route('/')
 def index():
-    # Change fromdb to something more descriptive
-    fromdb = mongo.db.prep.find({})
-    return render_template('index.html', fromdb=fromdb)
+    prep_list = mongo.db.prep.find({})
+    return render_template('index.html', prep_list=prep_list)
 
 
 @app.route('/add-one', methods=['GET', 'POST'])
@@ -73,12 +82,20 @@ def start_inventory(inventory_id):
 
         inventory_uuid = str(uuid.uuid1())
         doc = []
-        mongo.db.inventory_id.insert_one({'inventory_id': inventory_uuid})
+        inserted_uuid = mongo.db.inventory_id.insert_one(
+            {'inventory_id': inventory_uuid})
+
+        date_created = inserted_uuid.inserted_id.generation_time.strftime(
+            '%A %B-%d-%Y')
+
         for d in request.form:
             prep_item = mongo.db.prep.find_one({'_id': ObjectId(d)})
             temp = {'on_hand': request.form[d],
                     'inventory_id': inventory_uuid,
-                    'item': prep_item['item']}
+                    'item': prep_item['item'],
+                    'date': date_created,
+                    'par': prep_item['par'],
+                    'unit': prep_item['unit']}
 
             doc.append(temp)
         mongo.db.inventory.insert_many(doc)
@@ -89,16 +106,20 @@ def start_inventory(inventory_id):
 @app.route('/show-one-inventory/<id>')
 def show_one_inventory(id):
     one_inventory = mongo.db.inventory.find({'inventory_id': id})
-    date_stamp = one_inventory[0]['_id'].generation_time.strftime(
-        '%A %B-%d-%Y')
-    print(one_inventory[0])
-    return render_template('show-one-inventory.html', one_inventory=one_inventory, date_stamp=date_stamp)
+    return render_template('show-one-inventory.html', one_inventory=one_inventory)
 
 
-@app.route('/delete-one', methods=['POST'])
-def delete_one():
+@app.route('/delete-inventory/', defaults={'inventory_id': None}, methods=['GET'])
+@app.route('/delete-inventory/<inventory_id>', methods=['GET'])
+def delete_inventory(inventory_id):
+    if inventory_id:
+        mongo.db.inventory_id.delete_one({'inventory_id': inventory_id})
+        mongo.db.inventory.delete_many({'inventory_id': inventory_id})
+        return redirect('/delete-inventory/')
 
-    return redirect('/')
+    inventory_id_list = mongo.db.inventory_id.find({})
+
+    return render_template('delete-inventory.html', inventory_id_list=inventory_id_list)
 
 
 if __name__ == '__main__':

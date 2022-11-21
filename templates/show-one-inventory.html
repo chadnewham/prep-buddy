@@ -2,34 +2,40 @@
 
 {%block content%}
     <div class="ui large header">
-        {{date_stamp}}
+        {{one_inventory[0]['_id'].generation_time.strftime(
+            '%A %B-%d-%Y')}}
     </div>
 
-    <table class="ui compact celled definition table">
+    <table class="ui compact celled striped definition table">
         <thead>
             <tr>
-                <th></th>
-                <th>Item</th>
-                <th>Par</th>
-                <th>On Hand</th>
-                <th>Prepped</th>
+                <th class="one wide"></th>
+                <th class="three wide">Item</th>
+                <th class="one wide">Par</th>
+                <th class="one wide">On Hand</th>
+                <th class="one wide">Prepped</th>
+                <th class="six wide">Comments</th>
             </tr>
         </thead>
-        <tbody>
-            {%for item in one_inventory%}
-            <tr>
-                <td class="collapsing">
-                    <div class="ui fitted slider checkbox">
-                        <input type="checkbox"><label></label>
-                    </div>
-                </td>
-                <td>{{item['item']}}</td>
-                <td>par</td>
-                <td>{{item['on_hand']}}</td>
-                <td>prepped</td>
-            </tr>
-            {%endfor%}
-        </tbody>
+        <form action="/update-prep/" method="POST">
+            <tbody>
+                {%for item in one_inventory%}
+                <tr>
+                    <td class="collapsing">
+                        <div class="ui fitted slider checkbox">
+                            <input type="checkbox"><label></label>
+                        </div>
+                    </td>
+                    <td class="center aligned">{{item['item']}}</td>    
+                    <td class="center aligned">{{item['par']}}</td>
+                    <td class="center aligned">{{item['on_hand']}}</td>
+                    <td><div class="ui fluid input"><input type="text" name="prepped"></div></td>
+                    <td><textarea name="comments" id="" cols="40" rows="2" resize="Flase" style="resize:none"></textarea></td>
+                </tr>
+                {%endfor%}
+            </tbody>
+            <button class="ui button submit">Update</button>
+        </form>
     </table>
 {%endblock%}
 

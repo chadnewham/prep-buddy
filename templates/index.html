@@ -11,7 +11,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{%for doc in fromdb%}
+		{%for doc in prep_list%}
 		<tr>
 			<td data-label="Item"><a href="/edit-one/{{doc['_id']}}">{{doc['item']}}</a></td>
 			<td data-label="Par">{{doc['par']}}</td>
