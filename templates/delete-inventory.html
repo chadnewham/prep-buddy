@@ -1,0 +1,13 @@
+{% extends "base.html" %} {%block content%} 
+<div class="ui segment">
+    {%for item in inventory_id_list%}
+    <div class="ui segment">
+
+        <a href="/delete-inventory/{{item['inventory_id']}}">{{item['_id'].generation_time.strftime(
+            '%A %B-%d-%Y')}}</a>
+        </div>
+
+    {%endfor%}
+
+</div>
+{%endblock%}
